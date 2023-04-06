@@ -107,7 +107,7 @@ contract TokenFrenzy is VRFV2WrapperConsumerBase, ConfirmedOwner {
      * @param _acceptedTokens Addresses of accepted ERC20 tokens
      * @param _pairs Pools used for price fetching for each ERC20 token
      * @param _minBet Minimum amount of ERC20 in WETH token to enter the lottery. This includes owners fee as well
-     * @param _ownersFee Owners fee in procent %
+     * @param _ownersFee Owners fee in procent % (10000 = 100%)
      * @param _lotteryClosingTime Timestamp of the lottery next closing date and time
      * @dev WETH ERC20 token is always accepted
     */
@@ -133,9 +133,11 @@ contract TokenFrenzy is VRFV2WrapperConsumerBase, ConfirmedOwner {
         lotteryOpen = true;
     }
 
-    /// @notice Enter the lottery 
-    /// @param token Address of token to enter lottery
-    /// @param amount Amount of token to enter lottery 
+    /**
+     * @notice Enter the lottery
+     * @param token Address of token to enter lottery
+     * @param amount Amount of token to enter lottery 
+     */   
     function enterLottery(address token, uint256 amount) external  whenLotteryOpen{
         lotteryInstance storage newTokenfrenzy = tokenFrenzy[index];
         require(newTokenfrenzy.acceptedTokens[token],"Token not accepted!");
@@ -204,7 +206,7 @@ contract TokenFrenzy is VRFV2WrapperConsumerBase, ConfirmedOwner {
         return requestId;   
     }
 
-    /// @dev Callback function required to get the random number from VRF2. It picks a winners and approves the spending
+    /// @dev Callback function required to get the random number from VRF2
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override{
         require(statuses[requestId].fees > 0, "Request not found");
 
